@@ -3,11 +3,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:koko_note/api/gsheet_api.dart';
 import 'package:koko_note/blocs/get_notes/get_notes_bloc.dart';
+import 'package:koko_note/data/data_sources/note_data_sources.dart';
 
 import 'package:koko_note/data/model/koko_note_model.dart';
-import 'package:koko_note/data/model/note_model.dart';
 
 class DetailView extends StatefulWidget {
   final KokoNoteModel note;
@@ -32,8 +31,15 @@ class _DetailViewState extends State<DetailView> {
 
   void _update() async {
     log("Updating.....");
-    await GsheetApi.updateNote(
-      note: NoteModel(
+    // await GsheetApi.updateNote(
+    //   note: NoteModel(
+    //     id: widget.note.id,
+    //     text: textController.text,
+    //   ),
+    // );
+
+    await NotesDataSources().updateNote(
+      note: KokoNoteModel(
         id: widget.note.id,
         text: textController.text,
       ),

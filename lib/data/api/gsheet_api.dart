@@ -1,8 +1,6 @@
 import 'dart:developer';
 
-import 'package:dartz/dartz.dart';
 import 'package:gsheets/gsheets.dart';
-import 'package:koko_note/data/model/note_model.dart';
 
 class GsheetApi {
   //create credentials
@@ -25,69 +23,16 @@ class GsheetApi {
   //set up & connect to the spreadsheet
   static const _spreadSheetId = '1xJa746ozavZBRaMPIV40Is5BYx7WWslXSjKSxfu2D9Q';
   static final _gsheets = GSheets(_credential);
-  static Worksheet? _worksheet;
+  static Worksheet? worksheet;
 
   //intialize the spredsheet!
   Future init() async {
     try {
       final ss = await _gsheets.spreadsheet(_spreadSheetId);
-      _worksheet = ss.worksheetByTitle('Note1');
+      worksheet = ss.worksheetByTitle('Note1');
       log("Gsheets Connected");
     } catch (e) {
       log("Error init: $e");
-    }
-  }
-
-  //insert a new note
-  // static Future insert({required String note}) async {
-  //   if (_worksheet != null) {
-  //     await _worksheet!.values.appendRow([note]);
-  //   } else {
-  //     log("Worksheet Null");
-  //   }
-  // }
-
-  static Future addNote({required NoteModel note}) async {
-    if (_worksheet != null) {
-      await _worksheet!.values.map.appendRow(note.toGSheets());
-    } else {
-      log("Worksheet Null");
-    }
-  }
-
-  static Future updateNote({required NoteModel note}) async {
-    if (_worksheet != null) {
-      final index = await _worksheet?.values.map.rowByKey(note.id);
-      if (index != null) {
-        log("Updating id($id) Succed");
-
-        return _worksheet!.values.map.insertRowByKey(
-          note.id,
-          note.toGSheets(),
-          fromColumn: 2,
-          overwrite: true,
-        );
-      } else {
-        log("Note not found, inserting a new row.");
-        await _worksheet?.values.map.appendRow(note.toGSheets());
-      }
-      // _worksheet.values.map.
-    } else {
-      log("Worksheet Null");
-    }
-  }
-
-  static Future delete({required int id}) async {
-    if (_worksheet != null) {
-      final index = await _worksheet?.values.rowIndexOf(id);
-      try {
-        await _worksheet!.deleteRow(index!);
-        log("Deleting id($id) Succed");
-      } catch (e) {
-        log("Error deleting row with id $id : $e");
-      }
-    } else {
-      log("Worksheet Null");
     }
   }
 }

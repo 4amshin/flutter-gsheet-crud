@@ -2,8 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:koko_note/api/gsheet_api.dart';
 import 'package:koko_note/blocs/get_notes/get_notes_bloc.dart';
+import 'package:koko_note/data/data_sources/note_data_sources.dart';
+import 'package:koko_note/data/model/koko_note_model.dart';
 import 'package:koko_note/data/model/note_model.dart';
 import 'package:koko_note/presentation/home_view/widgets/g_input_field.dart';
 import 'package:koko_note/presentation/home_view/widgets/g_notes_grid.dart';
@@ -43,8 +44,11 @@ class _HomePageState extends State<HomePage> {
     final genId = "$hour$minute$second$day$month$year";
     log('Generated Id : $genId');
 
-    GsheetApi.addNote(
-      note: NoteModel(id: int.parse(genId), text: _textController.text),
+    NotesDataSources().addNote(
+      note: KokoNoteModel(
+        id: int.parse(genId),
+        text: _textController.text,
+      ),
     );
     _textController.clear();
     context.read<GetNotesBloc>().add(const GetNotesEvent.getNotes());
@@ -52,7 +56,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _delete() async {
-    await GsheetApi.delete(id: 213002060823);
+    // await GsheetApi.delete(id: 213002060823);
     log("Deleting id....");
     context.read<GetNotesBloc>().add(const GetNotesEvent.getNotes());
   }

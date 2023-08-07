@@ -1,10 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:koko_note/api/gsheet_api.dart';
 import 'package:koko_note/blocs/get_notes/get_notes_bloc.dart';
+import 'package:koko_note/data/data_sources/note_data_sources.dart';
 
 import 'package:koko_note/data/model/koko_note_model.dart';
 import 'package:koko_note/presentation/detail_view/view/detail_view.dart';
@@ -20,8 +19,8 @@ class GNotesGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     void _delete({required int id}) async {
-      await GsheetApi.delete(id: id);
-      log("Deleting id....");
+      // await GsheetApi.delete(id: id);
+      await NotesDataSources().deleteNote(id: id);
       context.read<GetNotesBloc>().add(const GetNotesEvent.getNotes());
     }
 
